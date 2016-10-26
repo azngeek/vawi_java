@@ -9,6 +9,9 @@
 * Planung für 5 Tage die Woche
 * Eine Kantine
 
+* Eine Datei mit Rezepten
+* Preisliste von verschiedenen Anbietr
+
 * Pro Planungszeitraum (offen)
 ** Kein Gericht darf doppelt vorkommen
 ** Mindestens ein Fischgericht PRO Woche
@@ -29,3 +32,6 @@
 * Wie ist eine Planungsperiode definiert?
 * Wie groß ist der Pool der Gerichte?
 * Können die Köche überhaupt jedes Gericht kochen?
+* Müssen die Gerichte IMMER anders sein? Schnitzel geht doch immer.
+* Wie setzen sich die Transportkosten zusammen?
+* Wie ist der Bestand pro Artikel? Hat jeder Händler alle Artikel? Wie ist die Verfügbarkeit?
