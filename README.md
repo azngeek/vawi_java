@@ -35,6 +35,7 @@
 * Müssen die Gerichte IMMER anders sein? Schnitzel geht doch immer.
 * Wie setzen sich die Transportkosten zusammen?
 * Wie ist der Bestand pro Artikel? Hat jeder Händler alle Artikel? Wie ist die Verfügbarkeit?
+* Haben Händler alle ihre eigene SKU?
 
 ** Stack
 
