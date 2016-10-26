@@ -35,3 +35,7 @@
 * Müssen die Gerichte IMMER anders sein? Schnitzel geht doch immer.
 * Wie setzen sich die Transportkosten zusammen?
 * Wie ist der Bestand pro Artikel? Hat jeder Händler alle Artikel? Wie ist die Verfügbarkeit?
+
+** Stack
+
+http://crunchify.com/how-to-build-restful-service-with-java-using-jax-rs-and-jersey/
