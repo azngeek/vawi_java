@@ -1,1 +1,31 @@
-# vawi_java
+# Rezeptplanung
+
+## Fakten
+
+* Zwei Standorte
+** Essen
+** Mülheim
+
+* Planung für 5 Tage die Woche
+* Eine Kantine
+
+* Pro Planungszeitraum (offen)
+** Kein Gericht darf doppelt vorkommen
+** Mindestens ein Fischgericht PRO Woche
+** Mindestens ein Fleischgericht am Tag
+** Mindestens ein Veg. Gericht am Tag
+
+* Gerichte
+** Beliebtheit (dynamisch, manuell) -> Wie ist beliebtheit definiert? 
+** Zutaten
+*** Preis
+** Abwechslung (dynamisch, inkrementell pro Koch)
+
+## Offene Frage
+
+* Gibt es unterschiedliche Gerichte pro Kantine? Wirtschaftlich nicht sinnvoll da möglicherweise unterschiedliche Gerichte produziert werden
+* Transportkosten sind wie geregelt?
+* Abwechslung ist wichtig. Gleiches Gericht darf sich maximal wann wiederholen?
+* Wie ist eine Planungsperiode definiert?
+* Wie groß ist der Pool der Gerichte?
+* Können die Köche überhaupt jedes Gericht kochen?
