@@ -1,0 +1,211 @@
+@startuml
+
+
+
+package "de.vawi.stock" #DDDDEE {
+
+    class de.vawi.stock.Merchant {
+        - name
+        + setName()
+    }
+
+    class de.vawi.stock.Ingridient {
+        - price
+        - name
+        - Seller seller
+        - Double qty
+
+        + setPrice()
+        + setName()
+        + setSeller()
+    }
+
+    class de.vawi.stock.Ingridients {
+        - List<Ingridient> ingridients
+        + initializeByMerchant(String merchantCsvPath)
+        + getIngridient(String ingridient, Strategy SelectStrategy)
+    }
+
+    interface de.vawi.stock.SelectStrategy {
+        + fetch(List<Ingridients>)
+        + isAvailable(Double amount)
+    }
+
+    class de.vawi.stock.CheapestPriceSelectStrategy {
+        + fetch(List<Ingridients>)
+        + isAvailable(Double amount)
+    }
+
+    class de.vawi.stock.RegionSelectStrategy {
+            + fetch(List<Ingridients>)
+            + isAvailable(Double amount)
+        }
+
+    de.vawi.stock.Ingridients "1" *-- "many" de.vawi.stock.Ingridient : contains
+    de.vawi.stock.Ingridient  "1" *-- "many" de.vawi.stock.Merchant : has
+
+    de.vawi.stock.Ingridients o- de.vawi.stock.SelectStrategy : needs
+    de.vawi.stock.SelectStrategy <|-- de.vawi.stock.CheapestPriceSelectStrategy
+    de.vawi.stock.SelectStrategy <|-- de.vawi.stock.RegionSelectStrategy
+
+}
+
+package "de.vawi.recipes" #FFFFFF {
+
+    enum de.vawi.recipes.Type {
+      Fish
+      Vegetarian
+      Meat
+    }
+
+    class de.vawi.recipes.Cookbook {
+        - List<Recipe>
+        +initialize(String pathToRecipeCsv)
+    }
+
+    class de.vawi.recipes.Recipe {
+        - String name
+        - Type type
+        - Int popularity
+        - List<Ingridient> ingridients
+        + Recipe(String title, Type type)
+        + addRequiredIngridient(Ingredient)
+        - decreasePopularity()
+    }
+
+    class de.vawi.recipes.Ingredient {
+        - name
+        + setName()
+    }
+
+    de.vawi.recipes.Recipe "1" *-- "many" de.vawi.recipes.Ingredient : has
+    de.vawi.recipes.Cookbook "1" *-- "many" de.vawi.recipes.Recipe : has
+}
+
+
+package "de.vawi.planner" #DDDDDD {
+
+   note top of de.vawi.planner.NonRepeatableStrategy
+     Möglicherweise nicht notwendig wenn Rezepte
+     wie ein Stack/Queue behandelt werden und innerhalb
+     einer Planungsperiode kein wöchentlicher Reset
+     der Rezepte statt findet.
+   end note
+
+   note top of de.vawi.planner.PlannerContext
+     Der PlannerContext bekommt pro Kantine eine
+     Liste mit täglich allen Kriterien.
+
+     Diese Liste kann auch automatisch generiert werden.
+     Es müssen in dem Fall Regel hinterlegt werden.
+
+     Beispiel:
+     Mo: Fish, Saisonal|Popularity|Cheapest
+     Di: Meat, Cheapest
+     Mi: Vegetarian, Cheapest
+
+     <b>Dummy-Code</b>
+     <i>
+     foreach (days as day) {
+         PlannerContext.applyCriterias(day.criteria)
+         recipe = PlannerContext.fetchRecipe();
+         if (null !== recipe) {
+            return recipe;
+         }
+     }
+     </i>
+   end note
+
+  class de.vawi.planner.PlannerContext {
+      -Stack<Recipes> recipes
+      -Stack<Recipes> selectedRecipes
+      -Stack<Recipes> history
+      -Cookbook cookbook
+      -Ingridients ingridients
+      +setCookbook(Cookbook book)
+      +applyCriterias(PlanningStrategy)
+      +fetchRecipe(Type)
+  }
+
+  interface de.vawi.planner.PlanningStrategy {
+      void sort()
+  }
+
+
+  class de.vawi.planner.CheapestStrategy {
+    void sort()
+  }
+
+  class de.vawi.planner.PopularityStrategy {
+    void sort()
+  }
+
+  class de.vawi.planner.MealTypeStrategy {
+    void sort()
+  }
+
+  class de.vawi.planner.NonRepeatableStrategy {
+    void sort()
+  }
+
+  de.vawi.planner.PlannerContext o- de.vawi.planner.PlanningStrategy : needs
+  de.vawi.planner.PlanningStrategy <|-- de.vawi.planner.PopularityStrategy
+  de.vawi.planner.PlanningStrategy <|-- de.vawi.planner.NonRepeatableStrategy
+  de.vawi.planner.PlanningStrategy <|-- de.vawi.planner.CheapestStrategy
+  de.vawi.planner.PlanningStrategy <|-- de.vawi.planner.MealTypeStrategy
+
+  de.vawi.planner.PlannerContext o- de.vawi.stock.Ingridients : needs
+  de.vawi.planner.PlannerContext o- de.vawi.recipes.Cookbook : needs
+}
+
+package "de.vawi.cantina" #EEEEEE {
+
+     note top of de.vawi.cantina.Schedule
+         Die Liste aller Menüs für einen bestimmten Planungs-
+         zeitraum ist wichtig. Diese kann entweder manuell (open)
+         oder aber automatisch durch den Generator erstellt werden.
+
+         Ein Problem bei allen Strategien ist jedoch dass bestimmte Zutaten
+         und Rezepte in einer gegebenen Reihenfolge möglicherweise dazu führen
+         dass günstige Zutaten übrig bleiben und der Algorithmus somit Gefahr
+         läuft dass am Ende nur noch teure Gerichte aufgrund der Verfügbarkeit
+         der Zutaten übrigbleiben.
+
+         Möglicher automatischer Lösungsansatz:
+
+         1. Alle Gerichte aus der Menge der Rezepte extrahieren, die sich
+         herstellen lassen.
+         2. Unter Berücksichtigung der Muss-Kriterien alle Kombinationen durchspielen.
+         3. Abhängig von der Anzahl der Bewertungskriterien ergibt sich jedoch eine
+         Aufwand von circa Kantine^Rezepte^Anzahl Kritierien.
+         Beispiel: 2^300^5
+         4. Alle Kombinationen sind durchgespielt und man kann sich manuell die beste aussuchen
+
+     end note
+
+    class de.vawi.cantina.Generator {
+    }
+
+    class de.vawi.cantina.Schedule {
+        - Cantina cantina
+        - List <Menu>
+        + process(PlannerContext)
+        + open(String pathToSchedule)
+    }
+
+    class de.vawi.cantina.Schedule {
+    }
+
+    class de.vawi.cantina.Menu {
+        - Type type
+        - Criterias criterias
+    }
+
+    de.vawi.cantina.Schedule "1" *-- "many" de.vawi.cantina.Menu : has
+    de.vawi.cantina.Schedule o- de.vawi.planner.PlannerContext : has
+}
+
+
+
+@enduml
+

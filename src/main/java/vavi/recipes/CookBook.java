@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class CookBook extends Stack {
 
-    Map<String, Object> recipes = new HashMap<String, Object>();
+    Map<String, Recipe> recipes = new HashMap<String, Recipe>();
 
     /**
      *
@@ -37,6 +37,8 @@ public class CookBook extends Stack {
              */
             for (String ingridient: nextLine[2].split("\\|")) {
                 Ingridient ingr = new Ingridient(ingridient);
+                ingr.setName(ingridient);
+                ingr.setPrice(20);
                 recipe.addIngridient(ingr);
             }
 
@@ -55,11 +57,11 @@ public class CookBook extends Stack {
     }
 
     /**
-     * Get all recipes which ae available
+     * Get all recipes which are available
      *
-     * @return
+     * @return Map<String, Recipe>
      */
-    public Map<String, Object> getRecipes()
+    public Map<String, Recipe> getRecipes()
     {
         return this.recipes;
     }
